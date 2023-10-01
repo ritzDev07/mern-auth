@@ -4,8 +4,9 @@ import dotenv from 'dotenv';
 import userRoutes from './routes/user.route.js';
 import authRoutes from './routes/auth.route.js';
 
-dotenv.config();
+dotenv.config(); // Load environment variables from a .env file
 
+// Connect to MongoDB using Mongoose
 mongoose.connect(process.env.MONGO)
     .then(() => {
         console.log("CONNECTED to MongoDB");
@@ -13,21 +14,22 @@ mongoose.connect(process.env.MONGO)
         console.log(err);
     });
 
-const app = express();
+const app = express(); // Create an Express application
 
-app.use(express.json());
+app.use(express.json()); // Middleware to parse JSON requests
 
 app.listen(3000, () => {
-    console.log("Server listening to PORT:3000");
+    console.log("Server listening to PORT: 3000");
 });
 
+// Define route handlers
+app.use("/api/user", userRoutes); // Use user routes for /api/user
+app.use("/api/auth", authRoutes); // Use authentication routes for /api/auth
 
-app.use("/api/user", userRoutes);
-app.use("/api/auth", authRoutes);
-
-app.use((err, req, res, next) =>{
-    const statusCode = err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+// Error handling middleware
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500; // Get the status code from the error, default to 500
+    const message = err.message || "Internal Server Error"; // Get the error message, default to "Internal Server Error"
     return res.status(statusCode).json({
         success: false,
         message,
