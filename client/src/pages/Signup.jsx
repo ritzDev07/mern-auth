@@ -55,23 +55,28 @@ const Signup = () => {
 
     return (
         <section className='p-3 max-w-lg mx-auto'>
-            <h1 className='text-3xl text-center font-semibold my-7'>Sign Up</h1>
+            <h1 className='text-3xl text-center font-semibold my-7'>
+                Sign Up
+            </h1>
+
             <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
                 <InputField type='text' id='username' placeholder='Username' onChange={handleChange} />
                 <InputField type='email' id='email' placeholder='Email' onChange={handleChange} />
                 <InputField type='password' id='password' placeholder='Password' onChange={handleChange} />
-                <button disabled={loading} className=' bg-blue-950 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-60'>
+                <button disabled={loading} className=' bg-blue-950 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-40'>
                     {
                         loading ? 'Loading...' : 'Sign up'
                     }
                 </button>
             </form>
+
             <div className='flex gap-2 mt-5'>
                 <p>Have an Account?</p>
                 <Link to='/sign-in'>
                     <span className='text-blue-500'>Sign In</span>
                 </Link>
             </div>
+
             <p className=' text-red-600 text-center mt-5'>
                 {
                     error && 'Something went wrong!'
