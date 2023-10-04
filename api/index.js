@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRoutes from './routes/user.route.js';
 import authRoutes from './routes/auth.route.js';
+import cookieParser from "cookie-parser";
 
 dotenv.config(); // Load environment variables from a .env file
 
@@ -17,6 +18,8 @@ mongoose.connect(process.env.MONGO)
 const app = express(); // Create an Express application
 
 app.use(express.json()); // Middleware to parse JSON requests
+
+app.use(cookieParser());
 
 app.listen(3000, () => {
     console.log("Server listening to PORT: 3000");
