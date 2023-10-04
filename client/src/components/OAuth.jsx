@@ -36,7 +36,7 @@ function OAuth() {
             navigate('/');
 
             // Log the authentication result
-            console.log(result);
+            // console.log(result);
 
         } catch (error) {
             // Handle authentication errors
