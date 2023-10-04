@@ -3,9 +3,10 @@ import { useSelector } from 'react-redux';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../firebase';
 import { useDispatch } from 'react-redux';
-import { updateUserStart, updateUserSuccess, updateUserFailure } from '../redux/user/userSlice';
+import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure } from '../redux/user/userSlice';
 
 const Profile = () => {
+
     const { currentUser, loading, error } = useSelector(state => state.user);
     const dispatch = useDispatch();
     const fileRef = useRef(null);
@@ -69,6 +70,24 @@ const Profile = () => {
         }
     };
 
+
+    const handleDeleteAccount = async () => {
+        try {
+            dispatch(deleteUserStart());
+            const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+                method: 'DELETE',
+            });
+            const data = await res.json();
+            if (data.success === false) {
+                dispatch(deleteUserFailure(data));
+                return;
+            }
+            dispatch(deleteUserSuccess(data));
+        } catch (error) {
+            dispatch(deleteUserFailure(error));
+        }
+    };
+
     return (
         <div className=' p-3 max-w-lg mx-auto'>
             <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -106,7 +125,7 @@ const Profile = () => {
                     autoComplete='username'
                     placeholder='Username'
                     id="username"
-                    className=' bg-slate-200 rounded-lg p-3 '
+                    className=' bg-slate-200 rounded-lg p-3'
                     onChange={handleChange}
                 />
 
@@ -117,7 +136,7 @@ const Profile = () => {
                     autoComplete='email'
                     placeholder='Email'
                     id="email"
-                    className=' bg-slate-200 rounded-lg p-3 '
+                    className=' bg-slate-200 rounded-lg p-3'
                     onChange={handleChange}
                 />
 
@@ -126,7 +145,7 @@ const Profile = () => {
                     name="password"
                     placeholder='Password'
                     id="password"
-                    className=' bg-slate-200 rounded-lg p-3 '
+                    className=' bg-slate-200 rounded-lg p-3'
                     onChange={handleChange}
                 />
 
@@ -138,17 +157,18 @@ const Profile = () => {
 
             </form>
             <div className=' flex justify-between mt-5'>
-                <span className=' text-red-700 cursor-pointer '>
+                <span className=' text-red-700 cursor-pointer'
+                    onClick={handleDeleteAccount} >
                     Delete Account
                 </span>
-                <span className=' text-red-700 cursor-pointer '>
+                <span className=' text-red-700 cursor-pointer'>
                     Sign out
                 </span>
             </div>
 
             <p className=' text-red-600 text-center mt-5'>
                 {
-                    error ? error || 'Something went wrong!' : ' '
+                    error && 'Something went wrong!'
                 }
             </p>
             <p className=' text-green-600 text-center mt-5'>
